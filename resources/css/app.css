@@ -1,66 +1,193 @@
-@import 'tailwindcss';
-@import '../../vendor/livewire/flux/dist/flux.css';
-
-@source '../views';
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
-@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
-
-@custom-variant dark (&:where(.dark, .dark *));
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
+@import "tailwindcss";
+@import "../../vendor/livewire/flux/dist/flux.css";
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --breakpoint-xs: 475px;
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
 
-    --color-zinc-50: #fafafa;
-    --color-zinc-100: #f5f5f5;
-    --color-zinc-200: #e5e5e5;
-    --color-zinc-300: #d4d4d4;
-    --color-zinc-400: #a3a3a3;
-    --color-zinc-500: #737373;
-    --color-zinc-600: #525252;
-    --color-zinc-700: #404040;
-    --color-zinc-800: #262626;
-    --color-zinc-900: #171717;
-    --color-zinc-950: #0a0a0a;
-
-    --color-accent: var(--color-neutral-800);
-    --color-accent-content: var(--color-neutral-800);
-    --color-accent-foreground: var(--color-white);
+    --color-main: #bd4d60;
+    --color-main-dark: #993544;
+    --color-slate: #90a1b9;
+    --color-gray-950: #030712;
+    --color-main-50: #fdecec;
+    --color-orange-400: #c74c36;
+    --color-red-500: #fb2c36;
+    --color-blue-500: #2b7fff;
+    --color-yellow-500: #e9a81b;
+    --color-gray-300: #d1d5dc;
+    --color-gray-500: #374151;
+    --color-gray-700: #1a1919;
 }
 
-@layer theme {
-    .dark {
-        --color-accent: var(--color-white);
-        --color-accent-content: var(--color-white);
-        --color-accent-foreground: var(--color-neutral-800);
+body {
+    color: var(--color-gray-950);
+    font-family: "Source Sans 3", sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    background: white;
+}
+h1 {
+    font-size: 2.5em;
+    font-weight: 800;
+    font-family: "Rubik", sans-serif;
+    line-height: 110%;
+}
+h2 {
+    font-size: 1.6em;
+    font-family: "Rubik", sans-serif;
+}
+h3 {
+    font-size: 1.1em;
+    font-family: "Rubik", sans-serif;
+}
+b {
+    font-weight: 700;
+}
+p {
+    margin-bottom: 0.2em;
+}
+
+.text-header {
+    line-height: 150%;
+    font-weight: 600;
+    color: var(--color-main);
+    position: relative;
+    font-size: 1.25em;
+    cursor: pointer;
+    transition: color 0.2s;
+    &:hover {
+        color: var(--color-main-dark);
+    }
+    &::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        border-radius: 0.2em;
+        height: 0.125em;
+        bottom: 0;
+        left: 0;
+        background-color: var(--color-main);
+        transform-origin: center;
+        transition: transform 0.2s, background-color 0.2s;
+    }
+    &:hover::after {
+        background-color: var(--color-main-dark);
+        transform: scaleX(1);
+        transform-origin: center;
+    }
+}
+.text-header-active::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 0.125em;
+    transform: scaleX(1);
+    bottom: 0;
+    left: 0;
+    background-color: var(--color-main);
+}
+
+label {
+    cursor: text;
+}
+
+.header-shadow {
+    box-shadow: 0px 4px 15px -12px rgba(8, 22, 15, 0.05),
+        0px 20px 24px -10px rgba(55, 189, 124, 0.1);
+}
+.form-shadow {
+    box-shadow: 0px 4px 16px 1px rgba(8, 22, 15, 0.1),
+        0px 20px 20px 4px rgba(55, 189, 124, 0.15);
+}
+
+.container {
+    max-width: 1536px;
+    margin-inline: auto;
+    padding-left: 0.5rem;
+    width: 100%;
+    padding-right: 0.5rem;
+    /*outline: solid 2px red;*/
+}
+
+.text-h1 {
+    font-size: 3em;
+    font-weight: 800;
+    font-family: "Rubik", sans-serif;
+    line-height: 110%;
+}
+.text-h2 {
+    font-size: 2.25em;
+    font-family: "Rubik", sans-serif;
+}
+.text-h3 {
+    font-size: 1.8em;
+    font-family: "Rubik", sans-serif;
+}
+.text-h4 {
+    font-size: 1.6em;
+    font-family: "Rubik", sans-serif;
+}
+.text-body {
+    font-size: 1.25em;
+    font-weight: 600;
+}
+.text-bold {
+    font-size: 1.25em;
+    font-weight: 600;
+}
+.text-light {
+    font-size: 1.1em;
+    font-weight: 400;
+}
+
+/* 2xl */
+@media (max-width: 1536px) {
+    .container {
+        max-width: 1280px;
     }
 }
 
-@layer base {
-
-    *,
-    ::after,
-    ::before,
-    ::backdrop,
-    ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
+/* xl */
+@media (max-width: 1280px) {
+    .container {
+        max-width: 1024px;
     }
 }
 
-[data-flux-field]:not(ui-radio, ui-checkbox) {
-    @apply grid gap-2;
+/* lg */
+@media (max-width: 1024px) {
+    .container {
+        max-width: 768px;
+    }
+    body {
+        font-size: 16px;
+    }
 }
 
-[data-flux-label] {
-    @apply  !mb-0 !leading-tight;
+/* md */
+@media (max-width: 768px) {
+    .container {
+        max-width: 640px;
+    }
 }
 
-input:focus[data-flux-control],
-textarea:focus[data-flux-control],
-select:focus[data-flux-control] {
-    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+/* sm */
+@media (max-width: 640px) {
+    .container {
+        max-width: 475px;
+    }
 }
 
-/* \[:where(&)\]:size-4 {
-    @apply size-4;
-} */
+/* xs */
+@media (max-width: 475px) {
+    .container {
+        width: 100%;
+    }
+}
