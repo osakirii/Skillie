@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('carreiras', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->text(column: 'desc')->nullable();
+            $table->text('desc')->nullable();
+            $table->string('categoria');
             $table->json('atributosIniciais');
             $table->string('imagem')->nullable();
             $table->timestamps();
