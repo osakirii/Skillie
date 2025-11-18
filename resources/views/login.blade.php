@@ -19,6 +19,18 @@
             <div class="max-h-[calc(100vh-5em)] w-full max-w-[24.5em] overflow-y-auto px-[1em] py-[2em]">
                 <h1>Login</h1>
                 <p>Bem-Vindo de volta!</p>
+                <form method="POST" action="{{ route('login') }}" class="space-y-4">
+                        @csrf
+                        <x-input name="email" label="Email" type="email" placeholder="email@seudominio.com" :value="old('email')" />
+                        <x-input name="password" label="Senha" type="password" placeholder="********" />
+                        <x-input name="password_confirmation" label="Confirmar senha" type="password" placeholder="********" />
+
+                    <br>
+                    <div>
+                        <x-button type="submit">Logar</x-button>
+                    </div>
+                </form>
+                <p>Não tem uma conta? <a href="/register" class="text-main hover:underline">Registre-se</a></p>
             </div>
         </div>
         <div class="absolute top-0 h-full w-[50%] p-[1em] max-lg:hidden right-0 pl-0">

@@ -53,6 +53,10 @@ p {
     margin-bottom: 0.2em;
 }
 
+.bg-main {
+    background-color: var(--color-main);
+}
+
 .text-header {
     line-height: 150%;
     font-weight: 600;
@@ -97,6 +101,43 @@ p {
 label {
     cursor: text;
 }
+
+input {
+    border: 1px solid var(--color-gray-300);
+    border-radius: 0.375em;
+    padding: 0.5em 0.25em;
+    font-size: 1em;
+    width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    &:focus {
+        outline: none;
+        border-color: var(--color-main);
+        box-shadow: 0 0 0 3px rgba(189, 77, 96, 0.3);
+    }
+}
+
+/* Textfield component styles used by x-input */
+.textfield-component label {
+    color: var(--color-gray-700);
+}
+.textfield-input {
+    width: 100%;
+    background: transparent;
+    color: var(--color-gray-700);
+    border: 1px solid var(--color-gray-300);
+    border-radius: 0.5rem;
+    padding: 10px 5px;
+    font-size: 1rem;
+    transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+}
+.textfield-input:focus {
+    outline: none;
+    border-color: var(--color-main);
+    box-shadow: 0 0 0 6px rgba(189,77,96,0.08);
+}
+.textfield-input.icon { padding-left: 48px; }
+.textfield-input.pw { padding-right: 48px; }
+.textfield-component .error { color: var(--color-red-500); font-size: .9rem; margin-top: .375rem; }
 
 .header-shadow {
     box-shadow: 0px 4px 15px -12px rgba(8, 22, 15, 0.05),
@@ -146,6 +187,9 @@ label {
     font-size: 1.1em;
     font-weight: 400;
 }
+.text-main {
+    color: var(--color-main);
+}
 
 /* 2xl */
 @media (max-width: 1536px) {
@@ -190,4 +234,18 @@ label {
     .container {
         width: 100%;
     }
+}
+
+/* Ensure clickable elements show pointer cursor */
+a, a[href],
+button:not([disabled]),
+input[type="submit"]:not([disabled]),
+input[type="button"]:not([disabled]),
+[role="button"]:not([disabled]) {
+    cursor: pointer;
+}
+
+/* For elements that act like buttons but aren't semantic */
+.clickable, [data-clickable] {
+    cursor: pointer;
 }

@@ -8,8 +8,15 @@
         </a>
         <!-- BOTÕES -->
         <div class="flex gap-[3rem] justify-center items-center">
-            <a class="text-header" href="/">Carreiras</a>
-            <x-button variant="solid" class="" href="/login">Login</x-button>
+            @if(Auth::check() && Auth::user()->is_admin == 1)
+                <a class="text-header" href="/admin/carreiras">Editar Carreiras</a>
+                <a class="text-header" href="/admin/cartas">Editar Cartas</a>
+            @endif
+            @auth
+                <x-button variant="solid" href="/perfil">Perfil</x-button>
+            @else
+                <x-button variant="solid" href="/login">Login</x-button>
+            @endauth
         </div>
     </div>
 </header>

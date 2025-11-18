@@ -7,27 +7,27 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Volt\Volt;
 use Tests\TestCase;
 
-class ProfileUpdateTest extends TestCase
+class perfilUpdateTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_profile_page_is_displayed(): void
+    public function test_perfil_page_is_displayed(): void
     {
         $this->actingAs($user = User::factory()->create());
 
-        $this->get('/settings/profile')->assertOk();
+        $this->get('/perfil')->assertOk();
     }
 
-    public function test_profile_information_can_be_updated(): void
+    public function test_perfil_information_can_be_updated(): void
     {
         $user = User::factory()->create();
 
         $this->actingAs($user);
 
-        $response = Volt::test('settings.profile')
+        $response = Volt::test('perfil')
             ->set('name', 'Test User')
             ->set('email', 'test@example.com')
-            ->call('updateProfileInformation');
+            ->call('updateperfilInformation');
 
         $response->assertHasNoErrors();
 
@@ -44,10 +44,10 @@ class ProfileUpdateTest extends TestCase
 
         $this->actingAs($user);
 
-        $response = Volt::test('settings.profile')
+        $response = Volt::test('perfil')
             ->set('name', 'Test User')
             ->set('email', $user->email)
-            ->call('updateProfileInformation');
+            ->call('updateperfilInformation');
 
         $response->assertHasNoErrors();
 
