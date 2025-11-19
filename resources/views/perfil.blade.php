@@ -13,7 +13,7 @@
     <x-header />
 
     <main class="mx-auto max-w-4xl px-4 py-10">
-        <h1 class="text-3xl font-extrabold text-rose-600 mb-6">Perfil do Usuário</h1>
+        <h1 class="text-3xl font-extrabold text-main mb-6">Perfil do Usuário</h1>
 
         <section class="bg-white shadow-md rounded-lg p-6">
             <h2 class="text-xl font-semibold mb-4">Informações Pessoais</h2>
@@ -42,9 +42,54 @@
                 </div>
 
                 <div>
-                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-rose-600 text-white rounded-md shadow hover:bg-rose-700">Salvar Alterações</button>
+                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-main text-white rounded-md shadow hover:bg-rose-700">Salvar Alterações</button>
                 </div>
             </form>
+        </section>
+        <!-- Historico: show recent games for the authenticated user -->
+        <section class="mt-6 bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-xl font-semibold mb-4">Histórico de Jogos</h2>
+            @php
+                $historicos = \App\Models\Historico::with('carreira')
+                    ->where('user_id', auth()->id())
+                    ->orderBy('data_jogo', 'desc')
+                    ->limit(20)
+                    ->get();
+            @endphp
+
+            @if($historicos->isEmpty())
+                <div class="text-sm text-gray-500">Nenhum histórico encontrado.</div>
+            @else
+                <ul class="space-y-3">
+                    @foreach($historicos as $h)
+                        @php
+                            $attrs = is_string($h->atributos_finais) ? json_decode($h->atributos_finais, true) : (array) $h->atributos_finais;
+                        $car = $h->carreira;
+                        $date = \Carbon\Carbon::parse($h->data_jogo)->locale('pt_BR')->translatedFormat('d/m/Y H:i');
+                    @endphp
+                    <li class="border border-gray-100 rounded-md p-3 flex items-start justify-between">
+                        <div>
+                            <div class="font-semibold">{{ $h->resultado }}</div>
+                            <div class="text-xs text-gray-500">{{ $car?->nome ?? 'Carreira' }} — {{ $date }}</div>
+                            <div class="mt-2 text-sm text-gray-700">
+                                <span class="mr-3">Est: {{ $attrs['estresse'] ?? $attrs['est'] ?? 0 }}</span>
+                                <span class="mr-3">Din: {{ $attrs['dinheiro'] ?? $attrs['din'] ?? 0 }}</span>
+                                <span class="mr-3">Rep: {{ $attrs['reputacao'] ?? $attrs['rep'] ?? 0 }}</span>
+                            </div>
+                        </div>
+                        <div class="text-right text-sm">
+                            <div class="text-gray-600">ID: {{ $h->id }}</div>
+
+                            <form method="POST" action="{{ route('perfil.historico.destroy', $h) }}" class="mt-2">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('Remover esse histórico?');" class="inline-flex items-center px-3 py-1 border rounded text-sm text-red-600 hover:bg-red-50">Excluir</button>
+                            </form>
+                        </div>
+                    </li>
+                    @endforeach
+                </ul>
+            @endif
         </section>
 
         <section class="mt-6">
@@ -52,7 +97,7 @@
             <div class="flex items-center gap-4">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-rose-600 text-rose-600 rounded-md hover:bg-rose-50">Logout</button>
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-main text-main rounded-md hover:bg-rose-50">Logout</button>
                 </form>
 
                 <form method="POST" id="delete-account-form" action="{{ route('perfil.destroy') }}">

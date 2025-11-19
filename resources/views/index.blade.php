@@ -48,92 +48,35 @@
                 <div id="career-results-panel" style="display:none;margin-top:.5rem;position:relative;z-index:40"></div>
             </div>
         </div>
-            <!-- CARREIRAS -->
-            <div class="w-full overflow-hidden">
-                <!-- TECNOLOGIA -->
-                <div class="container">
-                    <x-carousel id="tech-carousel" title="Tecnologia">
-                        <x-carousel-item title="Desenvolvedor Web"
-                            description="Descrição Descrição Descrição Descrição Descrição Descrição Descrição Descrição"
-                            image="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400"
-                            link="/carreira/desenvolvedor-web" />
+                <!-- CARREIRAS grouped by categoria -->
+            <div class="w-full overflow-hidden space-y-8">
+                @php
+                    $humanas = \App\Models\Carreiras::where('categoria', 'Humanas')->orderBy('nome')->get();
+                    $exatas = \App\Models\Carreiras::where('categoria', 'Exatas')->orderBy('nome')->get();
+                    $biologicas = \App\Models\Carreiras::where('categoria', 'Biologicas')->orderBy('nome')->get();
+                @endphp
 
-                        <x-carousel-item title="Cientista de Dados" description="Descrição Descrição Descrição"
-                            image="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400"
-                            link="/carreira/cientista-dados" />
+                @php
+                    $groups = [
+                        ['title' => 'Humanas', 'items' => $humanas, 'id' => 'humans-carousel'],
+                        ['title' => 'Exatas', 'items' => $exatas, 'id' => 'exacts-carousel'],
+                        ['title' => 'Biológicas', 'items' => $biologicas, 'id' => 'biologics-carousel'],
+                    ];
+                @endphp
 
-                        <x-carousel-item title="DevOps Engineer" description="Descrição Descrição Descrição"
-                            image="https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=400"
-                            link="/carreira/devops" />
-
-                        <x-carousel-item title="UI/UX Designer" description="Descrição Descrição Descrição"
-                            image="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400"
-                            link="/carreira/ui-ux-designer" />
-                    </x-carousel>
-                </div>
-
-                <!-- ESPORTES -->
-                <div class="container">
-                    <x-carousel id="sport-carousel" title="Esportes">
-                        <x-carousel-item title="Taekwondo" description="Descrição Descrição Descrição"
-                            image="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=400"
-                            link="/carreira/taekwondo" />
-
-                        <x-carousel-item title="Karate" description="Descrição Descrição Descrição"
-                            image="https://images.unsplash.com/photo-1555597673-b21d5c935865?w=400"
-                            link="/carreira/karate" />
-
-                        <x-carousel-item title="Judo" description="Descrição Descrição Descrição"
-                            image="https://images.unsplash.com/photo-1583473848882-f9a5bc7fd2ee?w=400"
-                            link="/carreira/judo" />
-
-                        <x-carousel-item title="Brazilian Jiu-Jitsu" description="Descrição Descrição Descrição"
-                            image="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=400"
-                            link="/carreira/jiu-jitsu" />
-
-                        <x-carousel-item title="Boxe Chinês" description="Descrição Descrição Descrição"
-                            image="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=400"
-                            link="/carreira/boxe-chines" />
-
-                        <x-carousel-item title="Boxe Chinês" description="Descrição Descrição Descrição"
-                            image="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=400"
-                            link="/carreira/boxe-chines" />
-
-                        <x-carousel-item title="Boxe Chinês" description="Descrição Descrição Descrição"
-                            image="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=400"
-                            link="/carreira/boxe-chines" />
-
-                        <x-carousel-item title="Boxe Chinês" description="Descrição Descrição Descrição"
-                            image="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=400"
-                            link="/carreira/boxe-chines" />
-                    </x-carousel>
-                </div>
-
-                <!-- EDUCAÇÃO -->
-                <div class="container">
-                    <x-carousel id="edu-carousel" title="Educação">
-                        <x-carousel-item title="Professor" description="Descrição Descrição Descrição"
-                            image="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400"
-                            link="/carreira/professor" />
-
-                        <x-carousel-item title="Pedagogo" description="Descrição Descrição Descrição"
-                            image="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400"
-                            link="/carreira/pedagogo" />
-                    </x-carousel>
-                </div>
-
-                <!-- FINANCEIRO -->
-                <div class="container">
-                    <x-carousel id="fin-carousel" title="Financeiro">
-                        <x-carousel-item title="Analista Financeiro" description="Descrição Descrição Descrição"
-                            image="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400"
-                            link="/carreira/analista-financeiro" />
-
-                        <x-carousel-item title="Contador" description="Descrição Descrição Descrição"
-                            image="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=400"
-                            link="/carreira/contador" />
-                    </x-carousel>
-                </div>
+                @foreach($groups as $group)
+                    <div class="container">
+                        <x-carousel :id="$group['id']" :title="$group['title']">
+                            @forelse($group['items'] as $c)
+                                @php $imagem = $c->imagem ?? null; @endphp
+                                @include('components._normalize_image')
+                                <x-carousel-item :title="$c->nome" :description="$c->desc" :image="$imagem" :link="url('/carreira/' . urlencode(strtolower(str_replace(' ', '-', $c->nome))))" />
+                            @empty
+                                <div class="text-sm text-gray-500 p-4">Nenhuma carreira nesta categoria.</div>
+                            @endforelse
+                        </x-carousel>
+                    </div>
+                @endforeach
             </div>
         </div>
 

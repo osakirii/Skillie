@@ -24,6 +24,7 @@ class CarreirasController extends Controller
         $data = $request->validate([
             'nome' => 'required|string|max:255',
             'desc' => 'nullable|string',
+            'categoria' => 'nullable|string|max:100',
             'atributosIniciais' => 'nullable|array',
             'imagem' => 'nullable|string|max:255',
             'situacoes' => 'sometimes|array',
@@ -33,9 +34,13 @@ class CarreirasController extends Controller
             'situacoes.*.decisao2_id' => 'nullable|exists:cartas,id',
         ]);
 
-        // Default atributosIniciais if not provided
+        // Build atributosIniciais from form fields if provided (estresse_inicial, dinheiro_inicial, reputacao_inicial)
         if (empty($data['atributosIniciais'])) {
-            $data['atributosIniciais'] = ['forca' => 0, 'inteligencia' => 0];
+            $data['atributosIniciais'] = [
+                'estresse' => (int) $request->input('estresse_inicial', 0),
+                'dinheiro' => (int) $request->input('dinheiro_inicial', 0),
+                'reputacao' => (int) $request->input('reputacao_inicial', 0),
+            ];
         }
 
         // Use transaction to ensure carreira and situacoes are created atomically
@@ -45,6 +50,7 @@ class CarreirasController extends Controller
             $carreira = Carreiras::create([
                 'nome' => $data['nome'],
                 'desc' => $data['desc'] ?? null,
+                'categoria' => $data['categoria'] ?? null,
                 'atributosIniciais' => $data['atributosIniciais'],
                 'imagem' => $data['imagem'] ?? null,
             ]);
@@ -53,6 +59,15 @@ class CarreirasController extends Controller
                 foreach ($data['situacoes'] as $sit) {
                     // ensure required name present
                     if (empty($sit['nome'])) continue;
+
+                    // ensure decisao1 and decisao2 are not the same (if both provided)
+                    if (!empty($sit['decisao1_id']) && !empty($sit['decisao2_id']) && $sit['decisao1_id'] == $sit['decisao2_id']) {
+                        DB::rollBack();
+                        if ($request->wantsJson()) {
+                            return response()->json(['error' => 'Decisão 1 e Decisão 2 devem ser cartas diferentes.'], 422);
+                        }
+                        return redirect()->back()->withInput()->withErrors(['situacoes' => 'Decisão 1 e Decisão 2 devem ser cartas diferentes.']);
+                    }
 
                     Situacoes::create([
                         'nome' => $sit['nome'],
